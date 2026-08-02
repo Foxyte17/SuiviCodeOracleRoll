@@ -1,0 +1,38 @@
+                     👑 UTILISATEUR
+             (Supervision & Validation)
+=========================================================
+                             │
+         ┌──────────────────┴──────────────────┐
+         ▼                                     ▼
+🔵 Mimo Orga (Opencode)              🟣 Mimo Debug (Opencode)
+├─ Orga & Docs                       ├─ Bugs & Config
+├─ Seul Push GitHub                  └─ Isolé de Mimo Orga
+└─ Délègue Équipe 0
+
+         │
+         ├─────────────────────────────────────┐
+         ▼                                     ▼
+┌─────────────────────────┐           ┌─────────────────┐
+│  ÉQUIPE 0 — Planif/Vis  │           │   SYNC GITHUB   │
+├─────────────────────────┤           ├─────────────────┤
+│ 🟢 Big Pickle 0       │           │ 📦 OracleRoll   │
+│ 🟢 Gemini 3.5 Flash-Lite│           │ 📦 Éditeur de cartes│
+└────────────┬────────────┘           └─────────────────┘
+             │
+             ├─────────────────────────────────┐
+             ▼                                 ▼
+┌─────────────────────────┐       ┌─────────────────────────────┐
+│   ÉQUIPE A — OracleRoll │       │   ÉQUIPE B — Éditeur de cartes │
+├─────────────────────────┤       ├─────────────────────────────┤
+│ 💻 A1 Code:             │       │ 💻 B1 Code:                 │
+│  ├─ 🟠 Claude (Prio)    │       │  ├─ 🟠 Claude (Prio)        │
+│  ├─ 🟤 Big Pickle A     │       │  ├─ 🟤 Big Pickle B         │
+│  └─ ⚪ Z.ai A1          │       │  └─ ⚪ Z.ai B1              │
+│                         │       │                             │
+│ 🎨 A2 Design:           │       │ 🎨 B2 Design:               │
+│  ├─ 🟠 Claude           │       │  ├─ 🟠 Claude               │
+│  ├─ 🟤 Big Pickle A     │       │  ├─ 🟤 Big Pickle B         │
+│  └─ 🟢 Gemini 3.5       │       │  └─ ⚪ Z.ai B2              │
+│     Flash-Lite          │       └─────────────────────────────┘
+└─────────────────────────┘
+=========================================================
