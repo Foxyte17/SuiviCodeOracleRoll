@@ -1,0 +1,103 @@
+.dice-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.die-btn {
+  aspect-ratio: 1;
+  background: var(--ink);
+  border: 1px solid var(--panel-line);
+  color: var(--parchment);
+  font-family: inherit;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 4px;
+}
+
+.die-btn .die-icon {
+  width: 34px;
+  height: 34px;
+  color: currentColor;
+}
+
+.die-btn .die-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  color: currentColor;
+}
+
+.die-btn:hover {
+  border-color: var(--brass);
+  color: var(--brass-bright);
+}
+
+.die-btn.active {
+  background: var(--brass);
+  border-color: var(--brass);
+  color: var(--ink);
+}
+
+#dice-spin-stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 22px 0;
+  perspective: 500px;
+}
+
+.dice-spin-icon {
+  width: 56px;
+  height: 56px;
+  color: var(--brass-bright);
+  transform-style: preserve-3d;
+}
+.dice-spin-icon.spinning {
+  animation: diceSpin 0.35s cubic-bezier(0.3, 0, 0.4, 1);
+}
+@keyframes diceSpin {
+  0% { transform: rotateY(0deg) rotateX(0deg) scale(1); }
+  50% { transform: rotateY(360deg) rotateX(180deg) scale(1.15); }
+  100% { transform: rotateY(720deg) rotateX(360deg) scale(1); }
+}
+
+#dice-flash {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(224,185,104,0.85), transparent 65%);
+  opacity: 0;
+  pointer-events: none;
+}
+#dice-flash.flashing {
+  animation: diceFlash 0.15s ease-out;
+}
+@keyframes diceFlash {
+  0% { opacity: 0; }
+  35% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Responsive — tablette */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .dice-grid { gap: 14px; }
+  .die-btn { border-radius: 8px; }
+  .die-btn .die-icon {
+    width: 44px;
+    height: 44px;
+  }
+  .die-btn .die-label { font-size: 0.82rem; }
+  #dice-spin-stage { padding: 30px 0; }
+  .dice-spin-icon {
+    width: 72px;
+    height: 72px;
+  }
+}

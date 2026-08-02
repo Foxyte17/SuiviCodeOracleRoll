@@ -1,0 +1,275 @@
+.cards-drawn {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.playing-card {
+  width: 84px;
+  height: 118px;
+  background: var(--parchment);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+  border: 1px solid #00000022;
+}
+.playing-card .rank { font-size: 1.5rem; line-height: 1; }
+.playing-card .suit { font-size: 1.6rem; margin-top: 4px; }
+.playing-card.pique .suit, .playing-card.pique .rank { color: var(--pique); }
+.playing-card.coeur .suit, .playing-card.coeur .rank { color: var(--coeur); }
+.playing-card.carreau .suit, .playing-card.carreau .rank { color: var(--carreau); }
+.playing-card.trefle .suit, .playing-card.trefle .rank { color: var(--trefle); }
+.playing-card.joker { background: var(--ink); border: 2px solid var(--brass); color: var(--brass-bright); }
+.playing-card.joker .rank { font-size: 0.95rem; letter-spacing: 0.05em; }
+
+.deck-status {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--parchment-dim);
+  margin-bottom: 6px;
+}
+
+.legend {
+  font-size: 0.78rem;
+  color: var(--parchment-dim);
+  line-height: 1.6;
+  margin-top: 10px;
+}
+.legend span.suit-tag { font-weight: 700; }
+.legend .pique-t { color: var(--pique); }
+.legend .coeur-t { color: var(--coeur); }
+.legend .carreau-t { color: var(--carreau); }
+.legend .trefle-t { color: var(--trefle); }
+
+.deck-card-field {
+  width: 100%;
+  background: var(--ink);
+  border: 1px solid var(--panel-line);
+  color: var(--parchment);
+  border-radius: 4px;
+  padding: 7px;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+.deck-card-field:focus { outline: 1px solid var(--brass); }
+textarea.deck-card-field { min-height: 50px; resize: vertical; }
+.deck-card-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--ink);
+  border: 1px solid var(--panel-line);
+  border-radius: 5px;
+  padding: 10px;
+}
+.deck-card-row button {
+  align-self: flex-end;
+  background: transparent;
+  border: 1px solid var(--panel-line);
+  color: var(--pique);
+  font-family: inherit;
+  font-size: 0.78rem;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.deck-card-row button:hover { border-color: var(--pique); }
+
+.deck-card-row-top {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.deck-card-row-top .deck-card-field { flex: 1; }
+.deck-card-icon-btn {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  background: var(--ink);
+  border: 1px solid var(--panel-line);
+  color: var(--parchment-dim);
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.deck-card-icon-btn:hover { border-color: var(--brass); color: var(--brass-bright); }
+.deck-card-icon-btn.has-icon { border-color: var(--brass); color: var(--brass-bright); }
+
+#deck-card-icon-picker {
+  display: none;
+  background: var(--ink);
+  border: 1px solid var(--brass);
+  border-radius: 5px;
+  padding: 10px;
+}
+#deck-card-icon-picker.open { display: block; }
+#deck-card-icon-picker .icon-picker-grid { margin-bottom: 8px; }
+
+.custom-card {
+  position: relative;
+  background: var(--ink);
+  border: 1px solid var(--brass);
+  border-radius: 8px;
+  padding: 22px 18px 18px;
+  text-align: center;
+}
+.custom-card-icon {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 20px;
+  height: 20px;
+  color: var(--brass);
+}
+.custom-card-emblem {
+  width: 32px;
+  height: 32px;
+  margin: 0 auto 8px;
+  color: var(--brass);
+  opacity: 0.9;
+}
+.custom-card-name-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.custom-card-name-wrap::before, .custom-card-name-wrap::after {
+  content: '';
+  flex: 1;
+  max-width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--brass), transparent);
+}
+.custom-card-name {
+  font-size: 1.15rem;
+  color: var(--brass-bright);
+  letter-spacing: 0.03em;
+}
+.custom-card-desc {
+  font-size: 0.85rem;
+  color: var(--parchment-dim);
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+/* ---------- LOADER DECK GITHUB ---------- */
+.github-deck-loader {
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--panel-line);
+}
+.github-deck-loader h3 {
+  margin: 0 0 10px;
+  font-size: 0.85rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--brass-bright);
+}
+.github-deck-url {
+  flex: 1;
+  min-width: 0;
+  background: var(--ink);
+  border: 1px solid var(--panel-line);
+  color: var(--parchment);
+  padding: 10px 12px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  transition: border-color 0.15s ease;
+}
+.github-deck-url::placeholder { color: var(--parchment-dim); opacity: 0.7; }
+.github-deck-url:hover { border-color: var(--brass); }
+.github-deck-url:focus { outline: none; border-color: var(--brass-bright); }
+#github-deck-status { margin-bottom: 0; }
+#github-deck-status.success { color: var(--trefle); }
+#github-deck-status.error { color: var(--pique); }
+
+/* ---------- CARTE IMAGE (recto/verso, carte entière) ---------- */
+.image-card-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+.image-card {
+  position: relative;
+  width: min(80vw, 420px);
+  aspect-ratio: 660 / 1140;
+  cursor: pointer;
+  border-radius: 10px;
+}
+.image-card-inner {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border: 1px solid var(--brass);
+  border-radius: 10px;
+  background: var(--ink);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+.image-card-img {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s ease;
+}
+.image-card.flipped .image-card-img { transform: rotate(180deg); }
+.image-card-missing {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--parchment-dim);
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  border: 1px dashed var(--panel-line);
+  border-radius: 10px;
+  background: var(--panel);
+}
+.image-card-name {
+  font-size: 0.95rem;
+  color: var(--brass-bright);
+  letter-spacing: 0.03em;
+  text-align: center;
+  max-width: 260px;
+}
+
+/* Responsive — tablette */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .github-deck-url {
+    font-size: 0.95rem;
+    padding: 12px 14px;
+  }
+  .image-card { width: min(76vw, 460px); }
+  .image-card-name {
+    font-size: 1rem;
+    max-width: 300px;
+  }
+}
+@media (min-width: 768px) and (max-width: 1199px) and (orientation: landscape) {
+  /* En paysage la hauteur disponible prime : la carte entière 660×1140
+     doit tenir dans le viewport sans forcer le défilement vertical.
+     aspect-ratio (règle de base) re-calcule la largeur depuis la hauteur
+     plafonnée, le ratio 660/1140 est donc conservé. */
+  .image-card {
+    width: min(76vw, 460px);
+    max-height: min(70vh, 640px);
+  }
+}

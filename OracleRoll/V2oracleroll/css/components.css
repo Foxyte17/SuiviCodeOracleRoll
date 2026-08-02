@@ -1,0 +1,290 @@
+/* ============================================================
+   components.css — Composants UI transversaux :
+   card-panel, row, inputs, boutons action/icon/bubble/mode
+   ============================================================ */
+
+.card-panel {
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: 6px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+.card-panel h2 {
+  margin: 0 0 14px;
+  font-size: 1.1rem;
+  color: var(--brass-bright);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--panel-line);
+  padding-bottom: 8px;
+}
+
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+.row label { font-size: 0.85rem; color: var(--parchment-dim); min-width: 90px; }
+
+select, input[type=number] {
+  background: var(--ink);
+  border: 1px solid var(--panel-line);
+  color: var(--parchment);
+  padding: 8px 10px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: border-color 0.15s ease;
+}
+
+select:hover, input[type=number]:hover {
+  border-color: var(--brass);
+}
+
+select:focus, input[type=number]:focus {
+  outline: none;
+  border-color: var(--brass-bright);
+}
+
+button.action {
+  background: var(--brass);
+  color: var(--ink);
+  border: none;
+  padding: 11px 20px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.15s ease;
+}
+button.action:hover { background: var(--brass-bright); }
+button.action.ghost {
+  background: transparent;
+  border: 1px solid var(--panel-line);
+  color: var(--parchment-dim);
+}
+button.action.ghost:hover { border-color: var(--brass); color: var(--parchment); }
+
+.bubble-toggle {
+  display: flex;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--panel-line);
+}
+.bubble-btn {
+  background: var(--ink);
+  color: var(--parchment-dim);
+  border: none;
+  padding: 8px 14px;
+  font-family: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.bubble-btn.active { background: var(--brass); color: var(--ink); font-weight: 600; }
+.bubble-btn:hover:not(.active) { color: var(--parchment); }
+
+.mode-btn {
+  background: var(--ink);
+  border: 1px solid var(--panel-line);
+  color: var(--parchment-dim);
+  font-family: inherit;
+  font-size: 0.82rem;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.mode-btn:hover { border-color: var(--brass); color: var(--parchment); }
+.mode-btn.active { background: var(--brass); border-color: var(--brass); color: var(--ink); font-weight: 600; }
+
+.result-box {
+  margin-top: 14px;
+  padding: 14px;
+  background: var(--ink);
+  border: 1px dashed var(--panel-line);
+  border-radius: 4px;
+  min-height: 24px;
+  font-size: 1rem;
+}
+
+.result-box .total {
+  font-size: 1.6rem;
+  color: var(--brass-bright);
+  letter-spacing: 0.03em;
+}
+
+.result-box .detail {
+  font-size: 0.82rem;
+  color: var(--parchment-dim);
+  margin-top: 4px;
+}
+
+.icon-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  flex: 1;
+}
+
+.icon-pick-btn {
+  aspect-ratio: 1;
+  background: var(--ink);
+  border: 1px solid var(--panel-line);
+  color: var(--parchment);
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+.icon-pick-btn:hover { border-color: var(--brass); color: var(--brass-bright); }
+.icon-pick-btn.active { background: var(--brass); border-color: var(--brass); color: var(--ink); }
+
+.icon-btn {
+  background: transparent;
+  border: 1px solid var(--panel-line);
+  color: var(--brass);
+  padding: 5px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.icon-btn:hover { border-color: var(--brass); color: var(--brass-bright); }
+.icon-btn.active { border-color: var(--brass); color: var(--brass-bright); background: rgba(193,154,73,0.14); }
+#favorite-star-btn.active { border-color: var(--brass); color: var(--brass-bright); }
+#favorite-star-btn.active svg { fill: currentColor; }
+
+.progress-fixed {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--panel);
+  border-top: 1px solid var(--panel-line);
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+  z-index: 50;
+}
+
+.progress-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brass-bright);
+}
+.progress-title::before, .progress-title::after {
+  content: '';
+  flex: 1;
+  max-width: 70px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--brass), transparent);
+}
+
+.progress-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.progress-btn {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 50%;
+  background: var(--ink);
+  border: 1px solid var(--panel-line);
+  color: var(--brass-bright);
+  font-size: 1.2rem;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.progress-btn:hover { border-color: var(--brass); background: var(--brass); color: var(--ink); }
+.progress-btn:active { transform: scale(0.92); }
+
+.progress-track {
+  flex: 1;
+  position: relative;
+  height: 14px;
+  background: var(--ink);
+  border: 1px solid var(--panel-line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.progress-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0%;
+  background: linear-gradient(90deg, var(--brass), var(--brass-bright));
+  transition: width 0.25s ease;
+}
+
+.progress-label {
+  font-size: 0.75rem;
+  color: var(--parchment-dim);
+  min-width: 46px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   Responsive — tablette (portrait 768–1023, paysage 1024–1199)
+   ============================================================ */
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .card-panel { padding: 24px; }
+  .card-panel h2 { font-size: 1.25rem; }
+  select, input[type=number] {
+    padding: 12px 12px;
+    font-size: 1rem;
+  }
+  button.action {
+    padding: 14px 24px;
+    font-size: 1rem;
+  }
+  .bubble-btn {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+  }
+  .mode-btn {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+  }
+  .icon-btn { padding: 8px 12px; }
+  .result-box {
+    font-size: 1.1rem;
+    padding: 16px;
+  }
+  .result-box .total { font-size: 2rem; }
+  .progress-fixed {
+    padding: 12px 20px calc(12px + env(safe-area-inset-bottom, 0px));
+  }
+  .progress-btn {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    font-size: 1.4rem;
+  }
+  .progress-track { height: 18px; }
+  .progress-title { font-size: 0.75rem; }
+  .progress-label {
+    min-width: 56px;
+    font-size: 0.85rem;
+  }
+}
