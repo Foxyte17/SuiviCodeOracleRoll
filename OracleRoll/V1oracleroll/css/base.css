@@ -1,0 +1,176 @@
+/* ============================================================
+   base.css — Reset, layout global, masthead, nav/tabs, fadein
+   ============================================================ */
+
+:root {
+  --ink: #14181f;
+  --panel: #1e2530;
+  --panel-line: #2f3948;
+  --parchment: #e6e0cf;
+  --parchment-dim: #a8a08b;
+  --brass: #c19a49;
+  --brass-bright: #e0b968;
+  --pique: #8b4a4a;
+  --coeur: #b0555f;
+  --carreau: #b0793f;
+  --trefle: #4a7a5a;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--ink);
+  color: var(--parchment);
+  font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  min-height: 100vh;
+  background-image:
+    radial-gradient(circle at 20% 10%, rgba(193,154,73,0.06), transparent 40%),
+    radial-gradient(circle at 80% 90%, rgba(193,154,73,0.05), transparent 45%);
+}
+
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 28px 18px 116px;
+}
+
+header.masthead {
+  text-align: center;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--panel-line);
+  padding-bottom: 18px;
+}
+
+.masthead-logo {
+  height: 92px;
+  width: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+header.masthead h1 {
+  font-size: 2rem;
+  letter-spacing: 0.08em;
+  margin: 0;
+  color: var(--brass-bright);
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+header.masthead p {
+  margin: 6px 0 0;
+  font-size: 0.85rem;
+  color: var(--parchment-dim);
+  font-style: italic;
+  letter-spacing: 0.03em;
+}
+
+nav.tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 22px;
+}
+
+nav.tabs button {
+  flex: 1;
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  color: var(--parchment-dim);
+  padding: 12px 4px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.15s ease;
+}
+
+nav.tabs button.active {
+  color: var(--ink);
+  background: var(--brass);
+  border-color: var(--brass);
+  font-weight: 600;
+}
+
+nav.tabs button:not(.active):hover {
+  border-color: var(--brass);
+  color: var(--parchment);
+}
+
+.tab { display: none; }
+.tab.active { display: block; animation: fadein 0.2s ease; }
+
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+footer.credits {
+  text-align: center;
+  color: var(--parchment-dim);
+  font-size: 0.72rem;
+  margin-top: 30px;
+  letter-spacing: 0.05em;
+}
+
+#splash-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--ink);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s ease;
+}
+#splash-screen img {
+  width: min(62vw, 340px);
+  height: auto;
+  display: block;
+}
+#splash-screen.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ============================================================
+   Responsive — tablette (portrait 768–1023, paysage 1024–1199)
+   ============================================================ */
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .app {
+    max-width: 860px;
+    padding: 32px 24px 136px;
+  }
+  header.masthead {
+    margin-bottom: 28px;
+    padding-bottom: 22px;
+  }
+  .masthead-logo { height: 104px; }
+  header.masthead h1 { font-size: 2.3rem; }
+  header.masthead p { font-size: 0.92rem; }
+  nav.tabs {
+    gap: 8px;
+    margin-bottom: 26px;
+  }
+  nav.tabs button {
+    padding: 15px 6px;
+    font-size: 0.9rem;
+  }
+  footer.credits { margin-top: 40px; }
+}
+
+/* Bureau (≥1200px) : comportement initial conservé, sans régression */
+@media (min-width: 1200px) {
+  .app {
+    max-width: 720px;
+    padding: 28px 18px 116px;
+  }
+}

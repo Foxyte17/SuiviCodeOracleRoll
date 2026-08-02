@@ -1,0 +1,38 @@
+/* Editor styles — uses general components from components.css */
+
+.table-category {
+  border: 1px solid var(--panel-line);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.table-category-header-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(193, 154, 73, 0.07);
+}
+.table-category-toggle {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--parchment);
+  font-family: inherit;
+  font-size: 0.92rem;
+  text-align: left;
+  padding: 10px 6px 10px 12px;
+  cursor: pointer;
+}
+.table-category-toggle:hover { color: var(--brass-bright); }
+.table-category-toggle .chevron { color: var(--brass); display: inline-block; width: 12px; }
+.table-category-body {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--panel);
+  border-top: 1px solid var(--panel-line);
+}
+.icon-btn.paste-icon { color: var(--parchment); }
+.icon-btn.paste-icon:hover { color: var(--brass-bright); border-color: var(--brass); }
+.icon-btn:disabled { opacity: 0.32; cursor: not-allowed; }
+.icon-btn:disabled:hover { border-color: var(--panel-line); color: var(--parchment); }
