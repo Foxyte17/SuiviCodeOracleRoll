@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Éditeur de cartes — Oracle Roll</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/editor.css">
+</head>
+<body>
+
+<header>
+  <h1>Éditeur de cartes — Oracle Roll</h1>
+  <div class="toolbar">
+    <button class="btn ghost small" onclick="saveProjectJson()">Sauvegarder le projet</button>
+    <label class="btn ghost small" style="margin:0;">
+      Charger un projet
+      <input type="file" accept="application/json" style="display:none;" onchange="loadProjectJson(event)">
+    </label>
+    <button class="btn small" onclick="exportCardPng()">Télécharger la carte (PNG)</button>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- ============ PANNEAU GAUCHE : DECKS ============ -->
+  <div class="panel">
+    <h2>Deck</h2>
+    <div class="deck-row">
+      <select id="deck-select" onchange="selectDeck(this.value)"></select>
+      <button class="btn ghost small" onclick="createDeck()">+</button>
+    </div>
+    <label>Nom du deck</label>
+    <input type="text" id="deck-name" oninput="renameDeck(this.value)">
+
+    <label>Dossier JSON</label>
+    <div class="folder-row">
+      <button id="json-folder-pick" class="btn ghost small" onclick="pickJsonFolder()">Choisir un dossier</button>
+      <span id="json-folder-name" class="folder-name"></span>
+      <button class="icon-btn" title="Exporter le deck (JSON)" aria-label="Exporter le deck (JSON)" onclick="exportDeckJson()">⬇</button>
+    </div>
+    <input type="text" id="json-folder-fallback" class="folder-fallback" style="display:none;" oninput="setDeckJsonFolder(this.value)">
+
+    <label>Dossier des images (PNG)</label>
+    <div class="folder-row">
+      <button id="image-folder-pick" class="btn ghost small" onclick="pickImageFolder()">Choisir un dossier</button>
+      <span id="image-folder-name" class="folder-name"></span>
+      <button class="icon-btn" title="Télécharger le deck (PNG)" aria-label="Télécharger le deck (PNG)" onclick="exportDeckPngs()">⬇</button>
+    </div>
+    <input type="text" id="image-folder-fallback" class="folder-fallback" style="display:none;" oninput="setDeckImageFolder(this.value)">
+
+    <h2>Cartes du deck</h2>
+    <div id="card-list"></div>
+    <button class="btn ghost small" style="width:100%; margin-top:6px;" onclick="addNewCard()">+ Nouvelle carte</button>
+  </div>
+
+  <!-- ============ PANNEAU CENTRE : APERÇU ============ -->
+  <div class="panel">
+    <div class="preview-wrap">
+      <div class="zoom-rail">
+        <button class="zoom-reset" title="Remettre le zoom à 100%" aria-label="Remettre le zoom à 100%" onclick="resetPreviewZoom()">↺</button>
+        <input type="range" id="preview-zoom-range" min="25" max="120" value="100" oninput="setPreviewZoom(this.value)">
+        <span id="preview-zoom-value">100%</span>
+        <button id="btn-flip-preview" class="btn ghost small" onclick="togglePreviewFlip()">↻ Pivoter</button>
+      </div>
+      <div class="preview-col">
+        <canvas id="preview-canvas" width="660" height="1140"></canvas>
+        <div class="status-msg" id="status-msg"></div>
+        <div class="legend">Aperçu zoomable - le zoom est purement visuel, l'export reste en 660 × 1140 px.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PANNEAU DROIT : ÉDITION DE FACE ============ -->
+  <div class="panel">
+    <div class="face-tabs">
+      <button class="face-tab active" id="tab-face-top" onclick="setActiveFace('top')">Face du haut</button>
+      <button class="face-tab" id="tab-face-bottom" onclick="setActiveFace('bottom')">Face du bas</button>
+    </div>
+
+    <h2>Texte</h2>
+    <label>Nom de la carte</label>
+    <input type="text" id="field-name" oninput="updateFaceField('name', this.value)">
+    <label>Description</label>
+    <textarea id="field-description" oninput="updateFaceField('description', this.value)"></textarea>
+    <label>Position de l'encart</label>
+    <div class="toggle-pair">
+      <button id="pos-left" onclick="updateFaceField('textPosition', 'left')">Gauche</button>
+      <button id="pos-right" onclick="updateFaceField('textPosition', 'right')">Droite</button>
+    </div>
+
+    <h2>Icône de type</h2>
+    <div class="icon-choice-grid" id="type-icon-grid"></div>
+
+    <h2>Icône de catégorie</h2>
+    <div class="icon-choice-grid" id="category-icon-grid"></div>
+
+    <h2>Illustration</h2>
+    <label>Depuis un fichier</label>
+    <input type="file" accept="image/*" onchange="handleImageFile(event)">
+    <div id="image-error" class="status-msg" style="color:var(--danger);"></div>
+
+    <div id="crop-section" style="display:none;">
+      <label>Cadrage (glisser pour repositionner)</label>
+      <div class="crop-box" id="crop-box">
+        <canvas id="crop-canvas"></canvas>
+      </div>
+      <div class="crop-hint">Glisse l'image pour la repositionner dans le cadre.</div>
+      <label>Zoom</label>
+      <input type="range" id="zoom-slider" min="100" max="300" value="100" oninput="updateZoom(this.value)">
+<label>Miroir</label>
+<div class="toggle-pair">
+  <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:var(--parchment-dim);cursor:pointer;">
+    <input type="checkbox" id="chk-flipH" onchange="updateFaceField('flipH', this.checked)"> Horizontal
+  </label>
+  <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:var(--parchment-dim);cursor:pointer;">
+    <input type="checkbox" id="chk-flipV" onchange="updateFaceField('flipV', this.checked)"> Vertical
+  </label>
+</div>
+
+      <label>Réglages</label>
+      <div class="slider-row"><span id="lbl-bright">100%</span><input type="range" min="50" max="150" value="100" oninput="updateFilter('brightness', this.value)"> Luminosité</div>
+      <div class="slider-row"><span id="lbl-contrast">100%</span><input type="range" min="50" max="150" value="100" oninput="updateFilter('contrast', this.value)"> Contraste</div>
+      <div class="slider-row"><span id="lbl-sat">100%</span><input type="range" min="0" max="200" value="100" oninput="updateFilter('saturation', this.value)"> Saturation</div>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/core/constants.js"></script>
+<script src="js/core/icons.js"></script>
+<script src="js/core/data-model.js"></script>
+<script src="js/utils/helpers.js"></script>
+<script src="js/modules/decks.js"></script>
+<script src="js/modules/cards.js"></script>
+<script src="js/modules/editor.js"></script>
+<script src="js/image/import.js"></script>
+<script src="js/image/crop.js"></script>
+<script src="js/render/engine.js"></script>
+<script src="js/export/export.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
