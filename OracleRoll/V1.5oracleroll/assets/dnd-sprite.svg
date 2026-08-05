@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="300" height="500" viewBox="0 0 300 500">
+  <rect width="300" height="500" fill="#1e2530"/>
+  <defs>
+    <g id="fig">
+      <circle cx="50" cy="31" r="13" fill="#e6e0cf" opacity="0.9"/>
+      <path d="M28 64 C28 46 72 46 72 64 L74 92 L26 92 Z" fill="#e6e0cf" opacity="0.55"/>
+    </g>
+  </defs>
+  <g fill="none" stroke="#2f3948" stroke-width="1">
+    <rect x="0" y="0" width="100" height="100"/>
+    <rect x="100" y="0" width="100" height="100"/>
+    <rect x="200" y="0" width="100" height="100"/>
+    <rect x="0" y="100" width="100" height="100"/>
+    <rect x="100" y="100" width="100" height="100"/>
+    <rect x="200" y="100" width="100" height="100"/>
+    <rect x="0" y="200" width="100" height="100"/>
+    <rect x="100" y="200" width="100" height="100"/>
+    <rect x="200" y="200" width="100" height="100"/>
+    <rect x="0" y="300" width="100" height="100"/>
+    <rect x="100" y="300" width="100" height="100"/>
+    <rect x="200" y="300" width="100" height="100"/>
+    <rect x="0" y="400" width="100" height="100"/>
+    <rect x="100" y="400" width="100" height="100"/>
+    <rect x="200" y="400" width="100" height="100"/>
+  </g>
+  <g fill="#a8a08b" font-family="Georgia, serif" font-size="9" text-anchor="middle">
+    <text x="12" y="13">1</text><text x="50" y="88">Barbare</text>
+    <text x="112" y="13">2</text><text x="150" y="88">Barde</text>
+    <text x="212" y="13">3</text><text x="250" y="88">Clerc</text>
+    <text x="12" y="113">4</text><text x="50" y="188">Druide</text>
+    <text x="112" y="113">5</text><text x="150" y="188">Guerrier</text>
+    <text x="212" y="113">6</text><text x="250" y="188">Magicien</text>
+    <text x="12" y="213">7</text><text x="50" y="288">Moine</text>
+    <text x="112" y="213">8</text><text x="150" y="288">Paladin</text>
+    <text x="212" y="213">9</text><text x="250" y="288">Rôdeur</text>
+    <text x="12" y="313">10</text><text x="50" y="388">Roublard</text>
+    <text x="112" y="313">11</text><text x="150" y="388">Sorcier</text>
+    <text x="212" y="313">12</text><text x="250" y="388">Occultiste</text>
+  </g>
+  <use xlink:href="#fig" href="#fig" transform="translate(0,0)"/>
+  <use xlink:href="#fig" href="#fig" transform="translate(100,0)"/>
+  <use xlink:href="#fig" href="#fig" transform="translate(200,0)"/>
+  <use xlink:href="#fig" href="#fig" transform="translate(0,100)"/>
+  <use xlink:href="#fig" href="#fig" transform="translate(100,100)"/>
+  <use xlink:href="#fig" href="#fig" transform="translate(200,100)"/>
+  <use xlink:href="#fig" href="#fig" transform="translate(0,200)"/>
+  <use xlink:href="#fig" href="#fig" transform="translate(100,200)"/>
+  <use xlink:href="#fig" href="#fig" transform="translate(200,200)"/>
+  <use xlink:href="#fig" href="#fig" transform="translate(0,300)"/>
+  <use xlink:href="#fig" href="#fig" transform="translate(100,300)"/>
+  <use xlink:href="#fig" href="#fig" transform="translate(200,300)"/>
+</svg>
