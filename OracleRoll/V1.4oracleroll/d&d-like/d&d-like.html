@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Générateur de Personnage D&D 5</title>
+<style>
+  :root {
+    --ink: #14181f;
+    --panel: #1e2530;
+    --panel-line: #2f3948;
+    --parchment: #e6e0cf;
+    --parchment-dim: #a8a08b;
+    --brass: #c19a49;
+    --brass-bright: #e0b968;
+    --pique: #8b4a4a;
+    --coeur: #b0555f;
+    --carreau: #b0793f;
+    --trefle: #4a7a5a;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--ink);
+    color: var(--parchment);
+    font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+    -webkit-tap-highlight-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  header {
+    width: 100%;
+    padding: 20px;
+    background: var(--panel);
+    border-bottom: 2px solid var(--brass);
+    text-align: center;
+  }
+
+  h1 {
+    margin: 0 0 15px 0;
+    color: var(--brass-bright);
+    font-size: 1.8rem;
+  }
+
+  .controls {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  button {
+    background: var(--brass);
+    color: var(--ink);
+    border: 1px solid var(--panel-line);
+    padding: 8px 16px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+
+  button:hover {
+    background: var(--brass-bright);
+    border-color: var(--brass-bright);
+  }
+
+  button:disabled {
+    background: var(--panel-line);
+    color: var(--parchment-dim);
+    cursor: not-allowed;
+  }
+
+  input[type="file"], select {
+    display: none;
+  }
+
+  select {
+    background: var(--ink);
+    color: var(--parchment);
+    border: 1px solid var(--brass);
+    padding: 5px;
+    border-radius: 4px;
+    font-family: inherit;
+    margin-top: 5px;
+    width: 100%;
+  }
+
+  .stat-mode-selector {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+  }
+
+  .stat-mode-selector label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  #array-allocator {
+    display: none;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+
+  .alloc-group select {
+    display: inline-block;
+    width: auto;
+    margin-top: 0;
+  }
+
+  #dice-zone {
+    margin-top: 15px;
+    color: var(--parchment-dim);
+    font-style: italic;
+  }
+  #dice-zone span {
+    color: var(--brass-bright);
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-left: 10px;
+  }
+
+  #character-sheet {
+    display: none;
+    width: 100%;
+    max-width: 900px;
+    margin: 30px auto;
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+
+  .sheet-header {
+    display: flex;
+    gap: 20px;
+    border-bottom: 1px solid var(--panel-line);
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+  }
+
+  /* --- Gestion de l'illustration (Sprite Sheet) --- */
+  .portrait-container {
+    width: 150px;
+    height: 150px;
+    border: 2px solid var(--brass);
+    border-radius: 4px;
+    overflow: hidden;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .sprite-div {
+    width: 100%;
+    height: 100%;
+    /* REMPLACE CETTE URL PAR TON IMAGE HEBERGEE */
+    background-image: url('https://placehold.co/300x500/1e2530/e6e0cf?text=1%20%202%20%203%0A4%20%205%20%206%0A7%20%208%20%209%0A10%2011%2012%0A13%2014%2015');
+    background-repeat: no-repeat;
+    background-size: 300% 500%; /* Grille de 3 colonnes et 5 lignes */
+    transition: transform 0.3s ease;
+    transform-origin: 50% 0%; /* Ancrage en haut au centre pour le zoom sur le visage */
+  }
+
+  /* Classe appliquée pour zoomer sur le visage dans la fiche */
+  .sprite-zoom-face {
+    transform: scale(2.5); 
+  }
+
+  .header-info {
+    flex-grow: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-content: center;
+  }
+
+  .info-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .info-group label {
+    color: var(--parchment-dim);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .info-group input, .info-group span {
+    background: var(--ink);
+    border: 1px solid var(--panel-line);
+    color: var(--parchment);
+    padding: 6px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1.1rem;
+    min-width: 120px;
+  }
+
+  .info-group span {
+    display: flex;
+    align-items: center;
+  }
+
+  .race-class-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .small-btn {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    background: var(--panel-line);
+    color: var(--parchment);
+    border: 1px solid var(--ink);
+    width: fit-content;
+  }
+
+  .sheet-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .panel {
+    background: var(--ink);
+    border: 1px solid var(--panel-line);
+    border-radius: 4px;
+    padding: 15px;
+  }
+
+  .panel h3 {
+    margin: 0 0 10px 0;
+    color: var(--brass);
+    border-bottom: 1px solid var(--panel-line);
+    padding-bottom: 5px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .stat-box {
+    text-align: center;
+    background: var(--panel);
+    padding: 8px;
+    border-radius: 4px;
+  }
+
+  .stat-name { font-size: 0.8rem; color: var(--parchment-dim); text-transform: uppercase; }
+  .stat-value { font-size: 1.6rem; font-weight: bold; color: var(--parchment); }
+  .stat-mod { font-size: 0.9rem; color: var(--brass-bright); }
+
+  .spell-list, .inventory-list { list-style: none; padding: 0; margin: 0; }
+  .spell-list li, .inventory-list li {
+    padding: 5px 0;
+    border-bottom: 1px dashed var(--panel-line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .spell-locked { color: var(--parchment-dim); font-style: italic; }
+
+  .shop-item, .inv-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  .shop-item button, .inv-item button {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+  }
+
+  .inv-item button {
+    background: var(--pique);
+    color: var(--parchment);
+  }
+
+  #image-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.9);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  /* Modale d'image en grand */
+  #modal-sprite {
+    width: 300px;
+    height: 500px;
+    /* REMPLACE CETTE URL PAR TON IMAGE HEBERGEE */
+    background-image: url('https://placehold.co/300x500/1e2530/e6e0cf?text=1%20%202%20%203%0A4%20%205%20%206%0A7%20%208%20%209%0A10%2011%2012%0A13%2014%2015');
+    background-repeat: no-repeat;
+    background-size: 300% 500%;
+    border: 4px solid var(--brass);
+  }
+
+  #btn-start-adventure {
+    width: 100%;
+    margin-top: 20px;
+    background: var(--trefle);
+    color: var(--parchment);
+    font-size: 1.1rem;
+    padding: 10px;
+  }
+
+  #btn-start-adventure:disabled {
+    background: var(--panel-line);
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Générateur de Personnage D&D 5</h1>
+  
+  <div class="stat-mode-selector">
+    <label><input type="radio" name="stat-mode" value="4d6" checked onchange="toggleStatMode()"> 4D6 (Aléatoire)</label>
+    <label><input type="radio" name="stat-mode" value="array" onchange="toggleStatMode()"> Répartition fixe (15, 14, 13, 12, 10, 8)</label>
+  </div>
+
+  <div id="array-allocator">
+    <!-- Les sélecteurs seront générés en JS -->
+  </div>
+
+  <div class="controls">
+    <button id="btn-dice" onclick="rollDice()">Lancer les dés (4D6)</button>
+    <button id="btn-generate">Tirer son personnage</button>
+    <label for="import-json" style="background: var(--panel-line); color: var(--parchment); border: 1px solid var(--panel-line); padding: 8px 16px; cursor: pointer; border-radius: 4px; font-weight: bold;">Importer Fiche</label>
+    <input type="file" id="import-json" accept=".json">
+  </div>
+  <div id="dice-zone">Vos statistiques ne sont pas encore tirées.</div>
+</header>
+
+<main id="character-sheet">
+  <div class="sheet-header">
+    <div class="portrait-container">
+      <div id="char-portrait" class="sprite-div sprite-zoom-face"></div>
+    </div>
+    <div class="header-info">
+      <div class="info-group">
+        <label for="char-name">Nom</label>
+        <input type="text" id="char-name" placeholder="Inconnu">
+      </div>
+      <div class="info-group">
+        <label for="char-age">Âge</label>
+        <input type="number" id="char-age" placeholder="Ans">
+      </div>
+      <div class="info-group">
+        <label for="char-size">Taille</label>
+        <input type="text" id="char-size" placeholder="m / cm">
+      </div>
+      
+      <div class="info-group">
+        <label>Race & Classe</label>
+        <div class="race-class-wrapper">
+          <span id="char-race-class"></span>
+          <div style="display:flex; gap:5px;">
+            <button class="small-btn" onclick="toggleSelect('race-select')">Détail des races</button>
+            <button class="small-btn" onclick="toggleSelect('class-select')">Détail des classes</button>
+          </div>
+          <select id="race-select" onchange="updateRace(this.value)"></select>
+          <select id="class-select" onchange="updateClass(this.value)"></select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sheet-body">
+    <div class="panel">
+      <h3>Caractéristiques</h3>
+      <div class="stats-grid" id="stats-container"></div>
+    </div>
+
+    <div class="panel">
+      <h3>Combat & Vitesse</h3>
+      <p><strong>PV Max :</strong> <span id="char-hp"></span></p>
+      <p><strong>Vitesse :</strong> <span id="char-speed"></span> cases</p>
+      <p><strong>Niveau :</strong> 1</p>
+    </div>
+
+    <div class="panel">
+      <h3>Magie & Sorts</h3>
+      <ul class="spell-list" id="spells-container"></ul>
+    </div>
+
+    <div class="panel">
+      <h3>Bourse & Équipement</h3>
+      <p><strong>Or restant :</strong> <span id="char-gold">20</span> PO</p>
+      <div id="shop-wrapper">
+        <h4 style="color:var(--parchment-dim); margin-bottom:5px;">Boutique :</h4>
+        <div id="shop-container"></div>
+      </div>
+      <h4 style="color:var(--parchment-dim); margin-top:15px;">Inventaire :</h4>
+      <ul class="inventory-list" id="inventory-container"></ul>
+      <button id="btn-export" style="margin-top: 15px; width: 100%;">Exporter la Fiche (JSON)</button>
+    </div>
+  </div>
+
+  <button id="btn-start-adventure" onclick="startAdventure()">Commencer l'aventure</button>
+</main>
+
+<div id="image-modal">
+  <div id="modal-sprite" class="sprite-div" style="transform: scale(1);"></div>
+  <button id="btn-validate-img" style="margin-top: 20px;">Générer la fiche</button>
+</div>
+
+<script>
+  // --- DONNÉES DU JEU ---
+  const races = ["Humain", "Elfe", "Nain", "Halfelin", "Drakéide", "Gnome", "Demi-elfe", "Demi-orc", "Tieffelin"];
+  const classes = ["Barbare", "Barde", "Clerc", "Druide", "Guerrier", "Magicien", "Moine", "Paladin", "Rôdeur", "Roublard", "Sorcier", "Occultiste"];
+  const statsNames = ["FOR", "DEX", "CON", "INT", "SAG", "CHA"];
+  const standardArray = [15, 14, 13, 12, 10, 8];
+  
+  const shopItems = [
+    { name: "Épée courte", cost: 10 },
+    { name: "Dague", cost: 2 },
+    { name: "Arc court", cost: 25 }, 
+    { name: "Armure de cuir", cost: 10 },
+    { name: "Bouclier", cost: 10 },
+    { name: "Matériel d'aventurier", cost: 1 },
+    { name: "Potions de soin (x2)", cost: 50 }
+  ];
+
+  const availableSpells = ["Projectile magique", "Boule de feu", "Armure du mage"];
+  const lockedSpells = ["Tornade de feu (Niv.5)", "Cône de froid (Niv.5)"];
+
+  const classSpritePos = {
+    "Barbare": "0% 0%", "Barde": "50% 0%", "Clerc": "100% 0%",
+    "Druide": "0% 25%", "Guerrier": "50% 25%", "Magicien": "100% 25%",
+    "Moine": "0% 50%", "Paladin": "50% 50%", "Rôdeur": "100% 50%",
+    "Roublard": "0% 75%", "Sorcier": "50% 75%", "Occultiste": "100% 75%"
+  };
+
+  // --- ÉTAT GLOBAL ---
+  let currentCharacter = null;
+  let rolledStats = null;
+
+  // --- FONCTIONS D'UTILITÉ ---
+  function roll4d6DropLowest() {
+    let rolls = [0,0,0,0].map(() => Math.floor(Math.random() * 6) + 1);
+    rolls.sort((a, b) => b - a);
+    return rolls[0] + rolls[1] + rolls[2];
+  }
+
+  function getModifier(score) {
+    return Math.floor((score - 10) / 2);
+  }
+
+  function applySprite(elementId, charClass) {
+    const el = document.getElementById(elementId);
+    const pos = classSpritePos[charClass] || "0% 0%";
+    el.style.backgroundPosition = pos;
+  }
+
+  // --- MODE DE STATISTIQUES ---
+  function toggleStatMode() {
+    const mode = document.querySelector('input[name="stat-mode"]:checked').value;
+    const diceZone = document.getElementById('dice-zone');
+    const allocator = document.getElementById('array-allocator');
+    
+    if (mode === '4d6') {
+      allocator.style.display = 'none';
+      diceZone.style.display = 'block';
+      document.getElementById('btn-dice').style.display = 'inline-block';
+    } else {
+      allocator.style.display = 'flex';
+      diceZone.style.display = 'none';
+      document.getElementById('btn-dice').style.display = 'none';
+      buildArrayAllocator();
+    }
+  }
+
+  function buildArrayAllocator() {
+    const container = document.getElementById('array-allocator');
+    container.innerHTML = '';
+    statsNames.forEach(stat => {
+      container.innerHTML += `
+        <div class="alloc-group">
+          <label>${stat}</label>
+          <select class="alloc-select" data-stat="${stat}" onchange="updateArrayOptions()"></select>
+        </div>
+      `;
+    });
+    updateArrayOptions();
+  }
+
+  function updateArrayOptions() {
+    const selects = document.querySelectorAll('.alloc-select');
+    const selectedValues = Array.from(selects).map(s => s.value).filter(v => v !== "");
+    
+    selects.forEach(select => {
+      const currentValue = select.value;
+      select.innerHTML = '<option value="">Choisir...</option>';
+      standardArray.forEach(val => {
+        if (val.toString() === currentValue || !selectedValues.includes(val.toString())) {
+          select.innerHTML += `<option value="${val}" ${val.toString() === currentValue ? 'selected' : ''}>${val}</option>`;
+        }
+      });
+    });
+  }
+
+  // --- LANCER DE DÉS ---
+  function rollDice() {
+    rolledStats = [0,0,0,0,0,0].map(() => roll4d6DropLowest());
+    document.getElementById('dice-zone').innerHTML = "Statistiques tirées : <span>" + rolledStats.join(', ') + "</span>";
+  }
+
+  // --- GÉNÉRATION ---
+  document.getElementById('btn-generate').addEventListener('click', () => {
+    const mode = document.querySelector('input[name="stat-mode"]:checked').value;
+    let finalStats = [];
+
+    if (mode === '4d6') {
+      if (!rolledStats) {
+        rolledStats = [0,0,0,0,0,0].map(() => roll4d6DropLowest());
+        document.getElementById('dice-zone').innerHTML = "Statistiques tirées (auto) : <span>" + rolledStats.join(', ') + "</span>";
+      }
+      // Mélange des stats
+      finalStats = [...rolledStats].sort(() => Math.random() - 0.5);
+    } else {
+      // Mode répartition fixe
+      const selects = document.querySelectorAll('.alloc-select');
+      finalStats = Array.from(selects).map(s => parseInt(s.value));
+      // Vérifier que tout est rempli
+      if (finalStats.some(isNaN)) {
+        alert("Veuillez attribuer toutes les caractéristiques avant de tirer le personnage.");
+        return;
+      }
+    }
+
+    const race = races[Math.floor(Math.random() * races.length)];
+    const charClass = classes[Math.floor(Math.random() * classes.length)];
+    
+    const conIndex = statsNames.indexOf("CON");
+    const hp = 10 + getModifier(finalStats[conIndex]);
+
+    currentCharacter = {
+      nom: "", age: "", taille: "",
+      race: race, classe: charClass, niveau: 1,
+      hp: hp, vitesse: 30,
+      stats: {},
+      or: 20,
+      inventaire: [
+        { name: "Vêtements de voyage", cost: 0 },
+        { name: "Bourse", cost: 0 }
+      ],
+      sorts_disponibles: availableSpells,
+      sorts_verrouilles: lockedSpells,
+      aventureCommencee: false
+    };
+
+    statsNames.forEach((stat, index) => {
+      currentCharacter.stats[stat] = finalStats[index];
+    });
+
+    applySprite('modal-sprite', charClass);
+    document.getElementById('image-modal').style.display = "flex";
+  });
+
+  document.getElementById('btn-validate-img').addEventListener('click', () => {
+    document.getElementById('image-modal').style.display = "none";
+    renderSheet();
+  });
+
+  // --- RENDU DE LA FICHE ---
+  function renderSheet() {
+    const sheet = document.getElementById('character-sheet');
+    sheet.style.display = "block";
+    
+    document.getElementById('char-name').value = currentCharacter.nom;
+    document.getElementById('char-age').value = currentCharacter.age;
+    document.getElementById('char-size').value = currentCharacter.taille;
+
+    applySprite('char-portrait', currentCharacter.classe);
+    document.getElementById('char-race-class').innerText = `${currentCharacter.race} ${currentCharacter.classe}`;
+    document.getElementById('char-hp').innerText = currentCharacter.hp;
+    document.getElementById('char-speed').innerText = currentCharacter.vitesse;
+    document.getElementById('char-gold').innerText = currentCharacter.or;
+
+    // Stats
+    const statsContainer = document.getElementById('stats-container');
+    statsContainer.innerHTML = '';
+    for (const [stat, value] of Object.entries(currentCharacter.stats)) {
+      const mod = getModifier(value);
+      const modStr = mod >= 0 ? `+${mod}` : `${mod}`;
+      statsContainer.innerHTML += `
+        <div class="stat-box">
+          <div class="stat-name">${stat}</div>
+          <div class="stat-value">${value}</div>
+          <div class="stat-mod">${modStr}</div>
+        </div>
+      `;
+    }
+
+    // Sorts
+    const spellsContainer = document.getElementById('spells-container');
+    spellsContainer.innerHTML = '';
+    currentCharacter.sorts_disponibles.forEach(spell => {
+      spellsContainer.innerHTML += `<li>${spell} <span style="color:var(--trefle);">✔</span></li>`;
+    });
+    currentCharacter.sorts_verrouilles.forEach(spell => {
+      spellsContainer.innerHTML += `<li class="spell-locked">${spell} <span>🔒</span></li>`;
+    });
+
+    // Gestion de l'aventure
+    const adventureStarted = currentCharacter.aventureCommencee;
+    const startBtn = document.getElementById('btn-start-adventure');
+    const shopWrapper = document.getElementById('shop-wrapper');
+
+    if (adventureStarted) {
+      startBtn.innerText = "Aventure en cours...";
+      startBtn.disabled = true;
+      shopWrapper.style.display = 'none'; // On cache la boutique une fois l'aventure commencée
+    } else {
+      startBtn.innerText = "Commencer l'aventure";
+      startBtn.disabled = false;
+      shopWrapper.style.display = 'block';
+
+      // Boutique
+      const shopContainer = document.getElementById('shop-container');
+      shopContainer.innerHTML = '';
+      shopItems.forEach(item => {
+        const canAfford = currentCharacter.or >= item.cost;
+        shopContainer.innerHTML += `
+          <div class="shop-item">
+            <span>${item.name} (${item.cost} PO)</span>
+            <button onclick="buyItem('${item.name}', ${item.cost})" ${!canAfford ? 'disabled' : ''}>Acheter</button>
+          </div>
+        `;
+      });
+    }
+
+    // Inventaire
+    const invContainer = document.getElementById('inventory-container');
+    invContainer.innerHTML = '';
+    currentCharacter.inventaire.forEach((item, index) => {
+      const canRefund = item.cost > 0 && !adventureStarted;
+      invContainer.innerHTML += `
+        <li class="inv-item">
+          <span>${item.name}</span>
+          ${canRefund ? `<button onclick="refundItem(${index})">Rembourser (${item.cost} PO)</button>` : ''}
+        </li>
+      `;
+    });
+  }
+
+  // --- LOGIQUE BOUTIQUE & REMBOURSEMENT ---
+  window.buyItem = function(name, cost) {
+    if (currentCharacter.or >= cost) {
+      currentCharacter.or -= cost;
+      currentCharacter.inventaire.push({ name: name, cost: cost });
+      renderSheet();
+    }
+  };
+
+  window.refundItem = function(index) {
+    const item = currentCharacter.inventaire[index];
+    if (item && item.cost > 0) {
+      currentCharacter.or += item.cost;
+      currentCharacter.inventaire.splice(index, 1);
+      renderSheet();
+    }
+  };
+
+  // --- BOUTON AVENTURE ---
+  window.startAdventure = function() {
+    if (confirm("Une fois l'aventure commencée, vous ne pourrez plus acheter ou vendre d'équipement. Confirmer ?")) {
+      currentCharacter.aventureCommencee = true;
+      renderSheet();
+    }
+  };
+
+  // --- CHANGEMENT RACE / CLASSE ---
+  function initSelectors() {
+    const raceSelect = document.getElementById('race-select');
+    const classSelect = document.getElementById('class-select');
+    races.forEach(r => raceSelect.innerHTML += `<option value="${r}">${r}</option>`);
+    classes.forEach(c => classSelect.innerHTML += `<option value="${c}">${c}</option>`);
+  }
+
+  window.toggleSelect = function(id) {
+    const select = document.getElementById(id);
+    select.style.display = select.style.display === 'block' ? 'none' : 'block';
+  };
+
+  window.updateRace = function(newRace) {
+    currentCharacter.race = newRace;
+    document.getElementById('race-select').style.display = 'none';
+    renderSheet();
+  };
+
+  window.updateClass = function(newClass) {
+    currentCharacter.classe = newClass;
+    document.getElementById('class-select').style.display = 'none';
+    renderSheet();
+  };
+
+  // --- SAUVEGARDE CHAMPS TEXTE ---
+  ['char-name', 'char-age', 'char-size'].forEach(id => {
+    document.getElementById(id).addEventListener('input', (e) => {
+      const key = id.split('-')[1];
+      if(key === 'name') currentCharacter.nom = e.target.value;
+      if(key === 'age') currentCharacter.age = e.target.value;
+      if(key === 'size') currentCharacter.taille = e.target.value;
+    });
+  });
+
+  // --- EXPORT / IMPORT JSON ---
+  document.getElementById('btn-export').addEventListener('click', () => {
+    if (!currentCharacter) return;
+    const dataStr = JSON.stringify(currentCharacter, null, 2);
+    const blob = new Blob([dataStr], {type: "application/json"});
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${currentCharacter.nom || 'personnage'}_fiche.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  document.getElementById('import-json').addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        currentCharacter = JSON.parse(e.target.result);
+        if(!currentCharacter.inventaire) currentCharacter.inventaire = [];
+        currentCharacter.inventaire = currentCharacter.inventaire.map(item => {
+          if (typeof item === 'string') return { name: item, cost: 0 };
+          return item;
+        });
+        if(currentCharacter.aventureCommencee === undefined) currentCharacter.aventureCommencee = false;
+        
+        rolledStats = Object.values(currentCharacter.stats);
+        document.getElementById('dice-zone').innerHTML = "Fiche chargée : <span>" + rolledStats.join(', ') + "</span>";
+        
+        renderSheet();
+        alert("Fiche chargée avec succès !");
+      } catch (error) {
+        alert("Erreur lors de la lecture du fichier JSON.");
+      }
+    };
+    reader.readAsText(file);
+  });
+
+  // Initialisation
+  initSelectors();
+
+</script>
+</body>
+</html>
